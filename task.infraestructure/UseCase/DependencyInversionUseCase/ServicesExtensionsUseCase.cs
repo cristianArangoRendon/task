@@ -13,9 +13,10 @@ namespace task.infraestructure.UseCase.DependencyInversionUseCase
             services.AddSingleton(configuration);
             services.AddTransient<IUserUseCase, UserUseCase>();
             services.AddTransient<IAuthenticationUseCase, AuthenticationUseCase>();
-            services.AddTransient<ITaskStatusUseCase, TaskStatusUseCase>();
-            services.AddTransient<ITaskUseCase, TaskUseCase>();
-
+            services.AddTransient<ISubjectUseCase, SubjectUseCase>();
+            services.AddTransient<IProfessorUseCase, ProfessorUseCase>();
+            services.AddTransient<IProfessorSubjectUseCase, ProfessorSubjectUseCase>();
+            services.AddTransient<IEnrollmentUseCase, EnrollmentUseCase>();
 
             return services;
         }

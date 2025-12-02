@@ -29,6 +29,19 @@ namespace task.Infrastructure.Services
             if (!string.IsNullOrEmpty(user.SpecialitiesUser))
             {
                 claims.Add(new Claim("Specialities", user.SpecialitiesUser));
+
+                if (user.SpecialitiesUser == "Estudiante")
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, "Student"));
+                }
+                else if (user.SpecialitiesUser == "Administrador")
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, "Admin"));
+                }
+                else
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, "User"));
+                }
             }
 
             if (!string.IsNullOrEmpty(user.PhoneUser))

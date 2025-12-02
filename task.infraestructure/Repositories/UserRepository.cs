@@ -1,5 +1,6 @@
 ﻿using task.core.DTOs.Paginator;
 using task.core.DTOs.Response;
+using task.core.DTOs.Students;
 using task.core.DTOs.Users;
 using task.core.Interfaces.Repositories;
 using task.core.Interfaces.Services;
@@ -72,6 +73,15 @@ namespace task.infraestructure.Repositories
                 "dbo.GetUserByEmail",
                 obj,
                 MapToObjHelper.MapToObj<UserMapDataByIdDTO>
+            );
+        }
+
+        public async Task<ResponseDTO> GetAllStudents(PaginatorDTO? paginator, GetFilterUsersDTO filters)
+        {
+            return await _executeStoreProcedureService.ExecuteTableStoredProcedure(
+                "dbo.GetAllStudents",
+                ObjectExtensionsHelper.ToObject<GetFilterUsersDTO>(filters),
+                MapToListHelper.MapToList<StudentMapDataListDTO>
             );
         }
     }

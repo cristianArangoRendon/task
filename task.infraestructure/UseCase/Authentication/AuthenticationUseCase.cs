@@ -24,11 +24,9 @@ namespace task.Infrastructure.UseCases.Authentication
 
             try
             {
-                await _logService.LogInformationAsync($"Authentication attempt started for email: {loginRequestDTO.Email}");
 
                 if (string.IsNullOrWhiteSpace(loginRequestDTO.Email) || string.IsNullOrWhiteSpace(loginRequestDTO.Password))
                 {
-                    await _logService.LogWarningAsync($"Authentication failed - Empty credentials for email: {loginRequestDTO.Email ?? "null"}");
                     response.Message = "Invalid credentials.";
                     await SimulatePasswordVerificationAsync();
                     return response;
@@ -49,10 +47,28 @@ namespace task.Infrastructure.UseCases.Authentication
                     {
                         if (!user.IsActiveUser)
                         {
-                            await _logService.LogWarningAsync($"Authentication failed - Inactive user attempted login: {normalizedEmail}");
                             _ = _securityService.VerifyPassword(loginRequestDTO.Password, user.PasswordHashUser, user.PasswordSaltUser);
                             response.Message = "Invalid credentials.";
                             return response;
+                        }
+
+                        if (loginRequestDTO.IsStudent)
+                        {
+                            if (user.SpecialitiesUser != "Estudiante")
+                            {
+                                _ = _securityService.VerifyPassword(loginRequestDTO.Password, user.PasswordHashUser, user.PasswordSaltUser);
+                                response.Message = "Invalid credentials.";
+                                return response;
+                            }
+                        }
+                        else
+                        {
+                            if (user.SpecialitiesUser == "Estudiante")
+                            {
+                                _ = _securityService.VerifyPassword(loginRequestDTO.Password, user.PasswordHashUser, user.PasswordSaltUser);
+                                response.Message = "Invalid credentials.";
+                                return response;
+                            }
                         }
 
                         isValidPassword = _securityService.VerifyPassword(
@@ -64,7 +80,6 @@ namespace task.Infrastructure.UseCases.Authentication
                 }
                 else
                 {
-                    await _logService.LogWarningAsync($"Authentication failed - User not found: {normalizedEmail}");
                     await SimulatePasswordVerificationAsync();
                 }
 
@@ -76,7 +91,7 @@ namespace task.Infrastructure.UseCases.Authentication
                     response.Message = "Authentication successful.";
                     response.Data = new
                     {
-                        Token = tokenResult.Token,
+                        tokenResult.Token,
                         ExpiresIn = 21600,
                         TokenType = "Bearer",
                         User = new
@@ -84,15 +99,14 @@ namespace task.Infrastructure.UseCases.Authentication
                             user.UserId,
                             user.NameUser,
                             user.EmailUser,
-                            user.IsActiveUser
+                            user.IsActiveUser,
+                            UserType = user.SpecialitiesUser 
                         }
                     };
 
-                    await _logService.LogSuccessAsync($"Authentication successful for user: {normalizedEmail} (UserID: {user.UserId})");
                 }
                 else
                 {
-                    await _logService.LogWarningAsync($"Authentication failed - Invalid password for email: {normalizedEmail}");
                     response.Message = "Invalid credentials.";
                 }
             }

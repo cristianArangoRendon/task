@@ -12,5 +12,6 @@ namespace task.core.Interfaces.UseCases
         Task<ResponseDTO> GetUserById(int userId);
         Task<ResponseDTO> GetListUsers(PaginatorDTO? paginator, GetFilterUsersDTO filters);
         Task<ResponseDTO> GetBase64ImageByFileName(string fileName, int fileType);
+        Task<ResponseDTO> GetAllStudents(PaginatorDTO? paginator, GetFilterUsersDTO filters);
     }
 }

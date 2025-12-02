@@ -12,5 +12,6 @@ namespace task.core.Interfaces.Repositories
         Task<ResponseDTO> GetUserById(int userId);
         Task<ResponseDTO> GetListUsers(PaginatorDTO? paginator, GetFilterUsersDTO filters);
         Task<ResponseDTO> GetUserByEmail(string email);
+        Task<ResponseDTO> GetAllStudents(PaginatorDTO? paginator, GetFilterUsersDTO filters);
     }
 }

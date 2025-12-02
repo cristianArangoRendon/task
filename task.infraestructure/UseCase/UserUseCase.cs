@@ -133,5 +133,17 @@ namespace task.Infrastructure.UseCases
                 return response;
             }
         }
+
+        public async Task<ResponseDTO> GetAllStudents(PaginatorDTO? paginator, GetFilterUsersDTO filters)
+        {
+            try
+            {
+                return await _userRepository.GetAllStudents(paginator, filters);
+            }
+            catch (Exception ex) when (ExceptionHelper.HandleException(_logService, System.Reflection.MethodBase.GetCurrentMethod()?.Name ?? string.Empty, ex) is var response)
+            {
+                return response;
+            }
+        }
     }
 }

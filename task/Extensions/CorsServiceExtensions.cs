@@ -2,7 +2,6 @@
 {
     public static class CorsServiceExtensions
     {
-
         public static IServiceCollection AddCorsPolicies(this IServiceCollection services)
         {
             services.AddCors(options =>
@@ -12,13 +11,12 @@
                     builder
                         .AllowAnyOrigin()
                         .AllowAnyMethod()
-                        .AllowAnyHeader();
+                        .AllowAnyHeader()
+                        .WithExposedHeaders("Token-Expired"); 
                 });
             });
-
             return services;
         }
-
 
         public static IApplicationBuilder UseCorsPolicies(this IApplicationBuilder app)
         {

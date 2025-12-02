@@ -12,6 +12,7 @@ namespace WMSGlobal.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Produces("application/json")]
+
     public class UsersController(ILogService logService, IUserUseCase useCase) : ControllerBase
     {
         private readonly IUserUseCase _userUseCase = useCase;
@@ -30,6 +31,8 @@ namespace WMSGlobal.Controllers
         [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize]
+
         public async Task<IActionResult> GetUsers(
             [FromQuery] PaginatorDTO? paginator,
             [FromQuery] GetFilterUsersDTO filters)
@@ -78,6 +81,8 @@ namespace WMSGlobal.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize]
+
         public async Task<IActionResult> UpdateUser(
             [FromRoute] int userId,
             [FromBody] UpdateUserDTO updateUserDTO)
@@ -104,6 +109,8 @@ namespace WMSGlobal.Controllers
         [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize]
+
         public async Task<IActionResult> DeleteUser([FromRoute] int userId)
           => await HandleResponseHelper.HandleResponse(
               () => _userUseCase.DeleteUser(userId),
@@ -126,6 +133,8 @@ namespace WMSGlobal.Controllers
         [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize]
+
         public async Task<IActionResult> GetUserImage(
             [FromRoute] string fileName,
             [FromQuery] int fileType)
@@ -134,5 +143,29 @@ namespace WMSGlobal.Controllers
             _logService,
             MethodBase.GetCurrentMethod()?.Name ?? string.Empty
         );
+
+
+        /// <summary>
+        /// Obtener lista de todos los estudiantes con filtros y paginación
+        /// </summary>
+        /// <remarks>
+        /// Obtiene solo usuarios con SpecialitiesUser = 'Estudiante'
+        /// </remarks>
+        /// <response code="200">Lista de estudiantes obtenida exitosamente</response>
+        /// <response code="401">No autorizado - Token inválido o expirado</response>
+        /// <response code="500">Error interno del servidor</response>
+        [HttpGet("students")]
+        [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize]
+        public async Task<IActionResult> GetAllStudents(
+            [FromQuery] PaginatorDTO? paginator,
+            [FromQuery] GetFilterUsersDTO filters)
+            => await HandleResponseHelper.HandleResponse(
+                () => _userUseCase.GetAllStudents(paginator, filters),
+                _logService,
+                MethodBase.GetCurrentMethod()?.Name ?? string.Empty
+            );
     }
 }

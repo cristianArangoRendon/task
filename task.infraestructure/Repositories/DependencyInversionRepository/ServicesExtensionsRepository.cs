@@ -16,9 +16,10 @@ namespace task.Infrastructure.Repository.DependencyInversion
             services.AddSingleton(configuration);
             services.AddTransient<IDataContext, DataContext>();
             services.AddTransient<IUserRepository, UserRepository>();
-            services.AddTransient<ITaskStatusRepository, TaskStatusRepository>();
-            services.AddTransient<ITaskRepository, TaskRepository>();
-
+            services.AddTransient<ISubjectRepository, SubjectRepository>();
+            services.AddTransient<IProfessorRepository, ProfessorRepository>();
+            services.AddTransient<IProfessorSubjectRepository, ProfessorSubjectRepository>();
+            services.AddTransient<IEnrollmentRepository, EnrollmentRepository>();
 
             return services;
         }
